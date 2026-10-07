@@ -171,7 +171,7 @@ body.cur-link .cursor-ring{width:64px;height:64px;margin:-32px 0 0 -32px;backgro
 .chip .sw{width:14px;height:14px;border-radius:4px;background:linear-gradient(135deg,#31A8FF,#001E36)}
 .chip-1{left:-6%;top:24%}
 .chip-2{right:-8%;top:52%;background:var(--ink);color:var(--paper);border-color:transparent}
-.chip-3{left:2%;bottom:12%;background:var(--gold);border-color:transparent}
+.chip-3{left:4%;bottom:24%;background:var(--gold);border-color:transparent}
 .scroll-hint{
   position:absolute;bottom:26px;left:50%;transform:translateX(-50%);
   display:flex;flex-direction:column;align-items:center;gap:9px;font-size:10.5px;
@@ -218,7 +218,7 @@ body.cur-link .cursor-ring{width:64px;height:64px;margin:-32px 0 0 -32px;backgro
 .stat span{display:block;margin-top:12px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.72;line-height:1.5}
 
 /* tools */
-.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(270px,100%),1fr));gap:18px}
 .tool-card{
   position:relative;background:#fff;border:1px solid var(--line);border-radius:var(--r);
   padding:30px 26px 26px;overflow:hidden;transform-style:preserve-3d;
@@ -259,7 +259,7 @@ body.cur-link .cursor-ring{width:64px;height:64px;margin:-32px 0 0 -32px;backgro
 .filter:hover{border-color:var(--ink)}
 .filter.active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
 .work-grid{
-  display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(min(258px,100%),1fr));
   gap:clamp(18px,2.4vw,30px);align-items:start;
 }
 .work-card{
@@ -317,13 +317,13 @@ body.cur-link .cursor-ring{width:64px;height:64px;margin:-32px 0 0 -32px;backgro
 .contact-lead{margin-top:20px;color:rgba(242,239,232,.6);max-width:46ch;font-size:16.5px}
 .contact-rows{display:grid;gap:10px;margin-top:46px}
 .c-row{
-  display:grid;grid-template-columns:140px 1fr 40px;align-items:center;gap:16px;
+  display:grid;grid-template-columns:minmax(110px,140px) minmax(0,1fr) 40px;align-items:center;gap:16px;
   padding:22px 20px;border:1px solid rgba(242,239,232,.16);border-radius:14px;
   transition:.45s var(--ease);
 }
 .c-row:hover{background:var(--accent);border-color:var(--accent);transform:translateX(8px)}
 .c-label{font-size:11px;letter-spacing:.24em;text-transform:uppercase;opacity:.55}
-.c-value{font-family:var(--display);font-size:clamp(17px,2.2vw,26px);font-weight:700;letter-spacing:-.01em}
+.c-value{font-family:var(--display);font-size:clamp(17px,2.2vw,26px);font-weight:700;letter-spacing:-.01em;min-width:0;overflow-wrap:anywhere}
 .c-go{justify-self:end;font-size:20px;transition:transform .4s var(--ease)}
 .c-row:hover .c-go{transform:translateX(6px)}
 .c-form{margin-top:38px;display:grid;gap:14px;max-width:720px}
@@ -409,9 +409,10 @@ body.cur-link .cursor-ring{width:64px;height:64px;margin:-32px 0 0 -32px;backgro
   .nav-cta{display:none}
   .brand-name{display:none}
   .f-row{grid-template-columns:1fr}
-  .c-row{grid-template-columns:1fr 34px;gap:6px}
+  .c-row{grid-template-columns:minmax(0,1fr) 34px;gap:6px 16px}
   .c-label{grid-column:1/-1}
   .c-go{grid-row:1/3;align-self:center}
+  .scroll-hint{display:none}
   .stats{grid-template-columns:1fr 1fr}
   .lb-nav{top:auto;bottom:18px;transform:none;width:44px;height:44px}
   .lb-prev{left:18px}.lb-next{right:18px}
@@ -423,7 +424,20 @@ body.cur-link .cursor-ring{width:64px;height:64px;margin:-32px 0 0 -32px;backgro
   .hero-meta{gap:16px;flex-wrap:wrap}
   .chip{font-size:11.5px;padding:7px 12px}
   .chip-1{left:-4%}
-  .chip-2{right:-4%}
+  .chip-2{right:-5%}
+  .loader{padding:20px 18px}
+  .loader-name{font-size:clamp(30px,11vw,150px)}
+  .loader-num{font-size:clamp(30px,9vw,90px)}
+  .loader-tag{font-size:9.5px;letter-spacing:.2em}
+  .contact-title{font-size:clamp(32px,7.5vw,60px)}
+  .sec-head h2{font-size:clamp(26px,5.6vw,34px)}
+  .foot-top>span:first-child{font-size:clamp(26px,7vw,40px)}
+}
+@media (max-width:340px){
+  .hero,.section,.contact{padding-left:12px;padding-right:12px}
+  .nav{padding-left:12px;padding-right:12px}
+  .footer{padding-left:12px;padding-right:12px}
+  .chip{font-size:10.5px;padding:6px 10px}
 }
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.01ms!important;transition-duration:.01ms!important}

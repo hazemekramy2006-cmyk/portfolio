@@ -336,11 +336,31 @@ addEventListener("keydown", e => {
 
 /* ---------------- contact form (EmailJS) ---------------- */
 const EMAILJS_CONFIG = {
-  publicKey: "",
-  serviceId: "",
+  publicKey: "eYKXtsYP5vAQpKmnt",
+  serviceId: "service_4btme5c",
   templateId: "",
   toEmail: "hazemekramy2006@gmail.com"
 };
+
+function sendViaFormSubmit(p) {
+  return fetch("https://formsubmit.co/ajax/" + encodeURIComponent(EMAILJS_CONFIG.toEmail), {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify({
+      _subject: `New project from ${p.from_name}`,
+      _captcha: "false",
+      Name: p.from_name,
+      Email: p.from_email,
+      Message: p.message
+    })
+  }).then(r => { if (!r.ok) throw new Error("formsubmit " + r.status); return r.json(); });
+}
+
+function openMailFallback(p) {
+  $("#fNote").style.color = "var(--accent)";
+  $("#fNote").textContent = "Couldn't send it — opening your email app...";
+  window.location.href = `mailto:${EMAILJS_CONFIG.toEmail}?subject=${encodeURIComponent("New project from " + p.from_name)}&body=${encodeURIComponent("Name: " + p.from_name + "\nEmail: " + p.from_email + "\n\n" + p.message)}`;
+}
 
 $("#cForm").addEventListener("submit", async e => {
   e.preventDefault();
@@ -354,24 +374,19 @@ $("#cForm").addEventListener("submit", async e => {
   };
   const ready = window.emailjs && EMAILJS_CONFIG.publicKey && EMAILJS_CONFIG.serviceId && EMAILJS_CONFIG.templateId;
 
-  if (!ready) {
-    note.style.color = "";
-    note.textContent = "Opening your email app...";
-    window.location.href = `mailto:${EMAILJS_CONFIG.toEmail}?subject=${encodeURIComponent("New project from " + params.from_name)}&body=${encodeURIComponent("Name: " + params.from_name + "\nEmail: " + params.from_email + "\n\n" + params.message)}`;
-    setTimeout(() => { note.textContent = "Thanks! I'll get back to you within 24 hours."; f.reset(); }, 1200);
-    return;
-  }
-
   btn.disabled = true;
   note.style.color = "";
   note.textContent = "Sending...";
   try {
-    await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, params, { publicKey: EMAILJS_CONFIG.publicKey });
+    if (ready) {
+      await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, params, { publicKey: EMAILJS_CONFIG.publicKey });
+    } else {
+      await sendViaFormSubmit(params);
+    }
     note.textContent = "Thanks! I'll get back to you within 24 hours.";
     f.reset();
   } catch (err) {
-    note.style.color = "var(--accent)";
-    note.textContent = "Couldn't send it — please email me directly.";
+    openMailFallback(params);
   } finally {
     btn.disabled = false;
   }

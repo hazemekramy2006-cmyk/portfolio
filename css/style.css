@@ -115,9 +115,10 @@ body.cur-link .cursor-ring{width:64px;height:64px;margin:-32px 0 0 -32px;backgro
 .hero{position:relative;min-height:100svh;display:flex;align-items:center;padding:120px clamp(16px,4vw,44px) 70px;z-index:1}
 .hero-grid{width:100%;max-width:1360px;margin:0 auto;display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(30px,5vw,64px);align-items:center}
 .hero-grid>*{min-width:0}
+.hero-copy{min-width:0;container-type:inline-size}
 .eyebrow{display:flex;align-items:center;gap:12px;font-size:11.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-soft);margin-bottom:22px}
 .eyebrow .line{width:52px;height:1px;background:var(--accent)}
-.hero-title{font-family:var(--display);font-weight:800;font-size:clamp(44px,7.6vw,112px);line-height:.86;letter-spacing:-.045em;text-transform:uppercase}
+.hero-title{font-family:var(--display);font-weight:800;font-size:clamp(44px,7.6vw,112px);font-size:clamp(34px,13.2cqw,110px);line-height:.86;letter-spacing:-.045em;text-transform:uppercase}
 .hero-title .word{display:block;overflow:hidden}
 .hero-title .word span{display:block;transform:translateY(105%);animation:riseUp 1.1s var(--ease) forwards}
 .hero-title .word:nth-child(2) span{animation-delay:.12s;color:transparent;-webkit-text-stroke:2px var(--ink)}
@@ -169,7 +170,7 @@ body.cur-link .cursor-ring{width:64px;height:64px;margin:-32px 0 0 -32px;backgro
   box-shadow:0 12px 30px -14px rgba(19,18,17,.4);will-change:transform;z-index:6;white-space:nowrap;
 }
 .chip .sw{width:14px;height:14px;border-radius:4px;background:linear-gradient(135deg,#31A8FF,#001E36)}
-.chip-1{left:-6%;top:24%}
+.chip-1{left:-8%;top:5%}
 .chip-2{right:-8%;top:52%;background:var(--ink);color:var(--paper);border-color:transparent}
 .chip-3{left:4%;bottom:24%;background:var(--gold);border-color:transparent}
 .scroll-hint{
@@ -423,8 +424,9 @@ body.cur-link .cursor-ring{width:64px;height:64px;margin:-32px 0 0 -32px;backgro
   .work-grid{grid-template-columns:1fr}
   .hero-meta{gap:16px;flex-wrap:wrap}
   .chip{font-size:11.5px;padding:7px 12px}
-  .chip-1{left:-4%}
+  .chip-1{left:-12%}
   .chip-2{right:-5%}
+  .circle-badge{width:80px;height:80px;top:-22px;right:-4px}
   .loader{padding:20px 18px}
   .loader-name{font-size:clamp(30px,11vw,150px)}
   .loader-num{font-size:clamp(30px,9vw,90px)}

@@ -338,7 +338,7 @@ addEventListener("keydown", e => {
 const EMAILJS_CONFIG = {
   publicKey: "eYKXtsYP5vAQpKmnt",
   serviceId: "service_4btme5c",
-  templateId: "",
+  templateId: "template_ad5aie9",
   toEmail: "hazemekramy2006@gmail.com"
 };
 

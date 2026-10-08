@@ -62,25 +62,58 @@ const $ = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 const isTouch = matchMedia("(pointer:coarse)").matches;
 
+/* ---------------- categories & groups ---------------- */
+const SKIN = [7, 8, 9, 11, 12, 14];
+const FOOD = [10, 13, 15, 16, 17];
+const CAT_ORDER = { logo: 0, branding: 1, social: 2 };
+const GROUP_ORDER = { "Real Estate": 0, "Skin cares": 1, "Food": 2, "Speedia Project": 0 };
+
+PROJECTS.forEach((p, i) => {
+  p._i = i;
+  if (p.c === "branding") p.g = "Speedia Project";
+  else if (p.c === "social") {
+    const n = +(p.t.match(/(\d+)$/) || [, 0])[1];
+    p.g = FOOD.includes(n) ? "Food" : SKIN.includes(n) ? "Skin cares" : "Real Estate";
+  }
+});
+PROJECTS.sort((a, b) =>
+  CAT_ORDER[a.c] - CAT_ORDER[b.c] ||
+  (GROUP_ORDER[a.g] ?? 0) - (GROUP_ORDER[b.g] ?? 0) ||
+  a._i - b._i
+);
+
 /* ---------------- build project grid ---------------- */
 const grid = $("#workGrid");
+let lastGroup = null;
 PROJECTS.forEach((p, i) => {
+  if (p.g && p.g !== lastGroup) {
+    lastGroup = p.g;
+    const h = document.createElement("h3");
+    h.className = "work-group reveal hide";
+    h.dataset.cat = p.c;
+    h.innerHTML = `<span>${p.g}</span><em>${String(PROJECTS.filter(x => x.g === p.g).length).padStart(2, "0")}</em><i></i>`;
+    grid.appendChild(h);
+  }
+  if (!p.g) lastGroup = null;
+
   const card = document.createElement("figure");
-  card.className = "work-card reveal";
+  card.className = "work-card reveal hide";
   card.dataset.cat = p.c;
+  card.dataset.g = p.g || "";
   card.dataset.index = i;
   card.dataset.cursor = "view";
+  const no = (p.t.match(/(\d+)$/) || [, i + 1])[1];
   const file = p.src;
   card.innerHTML = `
     <div class="work-frame">
       <span class="crop a"></span><span class="crop b"></span>
       <span class="crop c"></span><span class="crop d"></span>
-      <span class="work-no">${String(i + 1).padStart(2, "0")}</span>
+      <span class="work-no">${String(no).padStart(2, "0")}</span>
       <img src="${file}" alt="${p.t}" loading="lazy" data-ph="${placeholder(i)}">
       <div class="work-hover"><span>View project</span></div>
     </div>
     <figcaption class="work-meta">
-      <h3>${p.t}</h3><em>${p.c}</em>
+      <h3>${p.t}</h3><em>${p.g || p.c}</em>
     </figcaption>`;
   const img = card.querySelector("img");
   img.addEventListener("error", () => { if (img.src !== img.dataset.ph) img.src = img.dataset.ph; });
@@ -228,19 +261,32 @@ if (!isTouch) {
 }
 
 /* ---------------- filters ---------------- */
-let current = "all";
+let current = null;
+const emptyState = $("#workEmpty");
+
+function applyFilter(animate) {
+  $$(".filter").forEach(f => f.classList.toggle("active", f.dataset.filter === current));
+  let k = 0;
+  $$(".work-card, .work-group").forEach(el => {
+    const show = !!current && el.dataset.cat === current;
+    el.classList.toggle("hide", !show);
+    if (show && animate) {
+      el.classList.remove("in");
+      setTimeout(() => el.classList.add("in"), 60 + k * 40);
+      k++;
+    }
+  });
+  emptyState.classList.toggle("hide", !!current);
+}
+
 $("#filters").addEventListener("click", e => {
   const b = e.target.closest(".filter");
   if (!b) return;
-  $$(".filter").forEach(f => f.classList.remove("active"));
-  b.classList.add("active");
   current = b.dataset.filter;
-  $$(".work-card").forEach((c, i) => {
-    const show = current === "all" || c.dataset.cat === current;
-    c.classList.toggle("hide", !show);
-    if (show) { c.style.opacity = 0; c.style.transform = "translateY(18px)"; setTimeout(() => { c.style.opacity = 1; c.style.transform = ""; }, 40 + i * 25); }
-  });
+  applyFilter(true);
 });
+
+applyFilter(false);
 
 /* ---------------- lightbox ---------------- */
 const lb = $("#lightbox"), lbImg = $("#lbImg"), lbTitle = $("#lbTitle"),
@@ -265,7 +311,7 @@ function render() {
   const img = card.querySelector("img");
   lbImg.src = img.currentSrc || img.src;
   lbTitle.textContent = card.querySelector("h3").textContent;
-  lbCat.textContent = card.dataset.cat;
+  lbCat.textContent = card.dataset.g || card.dataset.cat;
   lbCount.textContent = String(lbIndex + 1).padStart(2, "0") + " / " + String(list.length).padStart(2, "0");
 }
 function closeLb() {

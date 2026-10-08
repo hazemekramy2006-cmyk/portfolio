@@ -356,6 +356,7 @@ body.cur-link .cursor-ring{width:64px;height:64px;margin:-32px 0 0 -32px;backgro
 .c-form input:focus,.c-form textarea:focus{outline:none;border-color:var(--accent);background:rgba(255,74,28,.08)}
 .c-form .btn{justify-self:start}
 .f-note{font-size:13.5px;color:#5CE08B;min-height:20px}
+.c-form .btn:disabled{opacity:.55;pointer-events:none}
 
 /* ---------- footer ---------- */
 .footer{background:var(--ink);color:var(--paper);padding:0 clamp(16px,4vw,44px) 34px}

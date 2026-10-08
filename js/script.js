@@ -334,12 +334,45 @@ addEventListener("keydown", e => {
   if (e.key === "ArrowRight") { lbIndex++; render(); }
 });
 
-/* ---------------- contact form ---------------- */
-$("#cForm").addEventListener("submit", e => {
+/* ---------------- contact form (EmailJS) ---------------- */
+const EMAILJS_CONFIG = {
+  publicKey: "",
+  serviceId: "",
+  templateId: "",
+  toEmail: "hazemekramy2006@gmail.com"
+};
+
+$("#cForm").addEventListener("submit", async e => {
   e.preventDefault();
-  const f = e.target;
-  const body = `Name: ${f.name.value}%0D%0AEmail: ${f.email.value}%0D%0A%0D%0A${f.msg.value}`;
-  document.getElementById("fNote").textContent = "Opening your email app...";
-  window.location.href = `mailto:hazemekramy.design@gmail.com?subject=New project from ${encodeURIComponent(f.name.value)}&body=${body}`;
-  setTimeout(() => { document.getElementById("fNote").textContent = "Thanks! I'll get back to you within 24 hours."; f.reset(); }, 1200);
+  const f = e.target, note = $("#fNote"), btn = f.querySelector("button");
+  const params = {
+    from_name: f.name.value.trim(),
+    from_email: f.email.value.trim(),
+    reply_to: f.email.value.trim(),
+    message: f.msg.value.trim(),
+    to_email: EMAILJS_CONFIG.toEmail
+  };
+  const ready = window.emailjs && EMAILJS_CONFIG.publicKey && EMAILJS_CONFIG.serviceId && EMAILJS_CONFIG.templateId;
+
+  if (!ready) {
+    note.style.color = "";
+    note.textContent = "Opening your email app...";
+    window.location.href = `mailto:${EMAILJS_CONFIG.toEmail}?subject=${encodeURIComponent("New project from " + params.from_name)}&body=${encodeURIComponent("Name: " + params.from_name + "\nEmail: " + params.from_email + "\n\n" + params.message)}`;
+    setTimeout(() => { note.textContent = "Thanks! I'll get back to you within 24 hours."; f.reset(); }, 1200);
+    return;
+  }
+
+  btn.disabled = true;
+  note.style.color = "";
+  note.textContent = "Sending...";
+  try {
+    await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, params, { publicKey: EMAILJS_CONFIG.publicKey });
+    note.textContent = "Thanks! I'll get back to you within 24 hours.";
+    f.reset();
+  } catch (err) {
+    note.style.color = "var(--accent)";
+    note.textContent = "Couldn't send it — please email me directly.";
+  } finally {
+    btn.disabled = false;
+  }
 });
